@@ -1,0 +1,12 @@
+ALL_CFLAGS += --target=$(ARCH)-unknown-elf
+
+HOST_TRIPLE := $(subst -, ,$(shell $(CC) -print-effective-triple))
+TEST_TARGET := $(ARCH)-$(word 2,$(HOST_TRIPLE))-$(word 3,$(HOST_TRIPLE))
+
+TEST_CFLAGS += --target=$(TEST_TARGET)
+TEST_LDFLAGS += -fuse-ld=lld
+
+SYSROOT := /usr/$(TEST_TARGET)/sys-root/
+ifneq ($(wildcard $(SYSROOT)),)
+TEST_LDFLAGS += --sysroot=$(SYSROOT)
+endif

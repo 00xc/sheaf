@@ -1,0 +1,2 @@
+# Avoid a warning on clang
+CFLAGS_ARCH := -mcx16
