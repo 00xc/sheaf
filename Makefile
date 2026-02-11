@@ -48,7 +48,8 @@ OBJS := $(SRCS:.c=.o)
 
 TEST_SRCS := $(wildcard tests/test_*.c)
 TEST_OBJS := $(TEST_SRCS:.c=.o)
-TESTS := $(TEST_OBJS:.o=)
+TESTS     := $(TEST_OBJS:.o=)
+RUN_TESTS := $(addprefix run-,$(TESTS))
 
 STATIC := libsheaf.a
 SHARED := libsheaf.so
@@ -79,8 +80,12 @@ tests/test_%: tests/test_%.o $(STATIC)
 
 tests: $(TESTS)
 
-run-tests: $(TESTS)
-	$(Q)$(foreach f,$^,./$(f) && echo "$(f): OK" || echo $(f): FAIL;)
+run-tests/%: tests/%
+	$(Q)./$< >/dev/null && \
+		echo "TEST    $< OK" || \
+		echo "TEST    $< FAIL"
+
+run-tests: $(RUN_TESTS)
 
 fmt:
 	$(Q)find src/ tests/ -name "*.c" | xargs -I{} clang-format -i {}
