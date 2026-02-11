@@ -1,7 +1,6 @@
 /* SPDX-License-Identifier: BSD-2-Clause */
 #define _GNU_SOURCE
 #include <err.h>
-#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 
