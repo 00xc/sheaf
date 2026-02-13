@@ -24,7 +24,8 @@ ifneq ($(wildcard Makefile.$(ARCH)),)
 include Makefile.$(ARCH)
 endif
 
-ALL_CFLAGS = -Wall -Wextra -Wpedantic -Werror -O2 -std=c11 -Iinclude/ -fPIC $(CFLAGS_ARCH) $(CFLAGS)
+ALL_CFLAGS := -Wall -Wextra -Wpedantic -Werror -O2 -std=c11 -Iinclude/ -fPIC
+ALL_CFLAGS += $(CFLAGS_ARCH) $(CFLAGS)
 
 ifneq ($(DEBUG),0)
 ALL_CFLAGS += -ggdb -DDEBUG
