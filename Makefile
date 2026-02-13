@@ -33,7 +33,7 @@ ALL_LDFLAGS += -ggdb
 endif
 
 ifneq ($(ASAN),0)
-ALL_CFLAGS += -fsanitize=address,undefined,
+ALL_CFLAGS += -fsanitize=address,undefined
 ALL_LDFLAGS += -fsanitize=address,undefined -static-libasan
 endif
 
