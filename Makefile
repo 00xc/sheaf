@@ -44,13 +44,15 @@ ifeq ($(LLVM),1)
 include Makefile.clang
 endif
 
-SRCS := $(wildcard src/*.c)
-OBJS := $(SRCS:.c=.o)
+SRCS           := $(wildcard src/*.c)
+OBJS           := $(SRCS:.c=.o)
+OBJS_DEPS      := $(OBJS:.o=.d)
 
-TEST_SRCS := $(wildcard tests/test_*.c)
-TEST_OBJS := $(TEST_SRCS:.c=.o)
-TESTS     := $(TEST_OBJS:.o=)
-RUN_TESTS := $(addprefix run-,$(TESTS))
+TEST_SRCS      := $(wildcard tests/test_*.c)
+TEST_OBJS      := $(TEST_SRCS:.c=.o)
+TEST_OBJS_DEPS := $(TEST_OBJS:.o=.d)
+TESTS          := $(TEST_OBJS:.o=)
+RUN_TESTS      := $(addprefix run-,$(TESTS))
 
 STATIC := libsheaf.a
 SHARED := libsheaf.so
@@ -69,11 +71,15 @@ $(SHARED): $(OBJS)
 
 %.o: %.c
 	$(info CC      $@)
-	$(Q)$(CC) $(ALL_CFLAGS) -c -o $@ $^
+	$(Q)$(CC) $(ALL_CFLAGS) -MMD -MP -c -o $@ $<
 
-tests/test_%.o: tests/test_%.c tests/libtest.h
+-include $(OBJS_DEPS)
+
+tests/test_%.o: tests/test_%.c
 	$(info CC-TEST $@)
-	$(Q)$(CC) $(TEST_CFLAGS) -c -o $@ $<
+	$(Q)$(CC) $(TEST_CFLAGS) -MMD -MP -c -o $@ $<
+
+-include $(TEST_OBJS_DEPS)
 
 tests/test_%: tests/test_%.o $(STATIC)
 	$(info LD-TEST $@)
@@ -98,6 +104,8 @@ fmt-check:
 
 clean:
 	rm -f $(OBJS)
+	rm -f $(OBJS_DEPS)
 	rm -f $(TEST_OBJS)
+	rm -f $(TEST_OBJS_DEPS)
 	rm -f $(TESTS)
 	rm -f $(STATIC) $(SHARED)
