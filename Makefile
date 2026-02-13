@@ -77,7 +77,7 @@ tests/test_%.o: tests/test_%.c tests/libtest.h
 
 tests/test_%: tests/test_%.o $(STATIC)
 	$(info LD-TEST $@)
-	$(Q)$(CC) -o $@ $^ $(TEST_CFLAGS) $(TEST_LDFLAGS)
+	$(Q)$(CC) $(TEST_CFLAGS) -o $@ $^ $(TEST_LDFLAGS)
 
 tests: $(TESTS)
 
