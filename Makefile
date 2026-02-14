@@ -90,7 +90,7 @@ tests: $(TESTS)
 run-tests/%: tests/%
 	$(Q)./$< >/dev/null && \
 		echo "TEST    $< OK" || \
-		echo "TEST    $< FAIL"
+		{ echo "TEST    $< FAIL"; exit 1; }
 
 run-tests: $(RUN_TESTS)
 
